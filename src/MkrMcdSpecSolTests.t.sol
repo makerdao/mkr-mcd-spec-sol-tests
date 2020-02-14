@@ -1,21 +1,247 @@
-pragma solidity ^0.5.15;
+pragma solidity ^0.5.12;
 
-import "ds-test/test.sol";
+import {
+    DssDeployTestBase,
+    Vat,
+    Vow,
+    Cat,
+    Pot,
+    Flapper,
+    Flopper,
+    Spotter,
+    End,
+    DSToken,
+    DSValue,
+    GemJoin,
+    Flipper
+} from "dss-deploy/DssDeploy.t.base.sol";
 
-import "./MkrMcdSpecSolTests.sol";
+contract UserLike {
+    Vat vat;
+    Vow vow;
+    Cat cat;
+    Pot pot;
+    Flapper flap;
+    Flopper flop;
+    Spotter spotter;
+    End end;
+    DSToken gov;
+    DSToken gold;
+    DSValue pipGold;
+    GemJoin goldJoin;
+    Flipper goldFlip;
 
-contract MkrMcdSpecSolTestsTest is DSTest {
-    MkrMcdSpecSolTests tests;
+    constructor(
+        Vat vat_,
+        Vow vow_,
+        Cat cat_,
+        Pot pot_,
+        Flapper flap_,
+        Flopper flop_,
+        Spotter spotter_,
+        End end_,
+        DSToken gov_,
+        DSToken gold_,
+        DSValue pipGold_,
+        GemJoin goldJoin_,
+        Flipper goldFlip_
+    ) public {
+        vat = vat_;
+        vow = vow_;
+        cat = cat_;
+        pot = pot_;
+        flap = flap_;
+        flop = flop_;
+        spotter = spotter_;
+        end = end_;
+        gov = gov_;
+        gold = gold_;
+        pipGold = pipGold_;
+        goldJoin = goldJoin_;
+        goldFlip = goldFlip_;
+    }
+
+    function vat_file(bytes32 what, uint256 data) external {
+        vat.file(what, data);
+    }
+
+    function vat_file(bytes32 what, bytes32 ilk, uint256 data) external {
+        vat.file(ilk, what, data);
+    }
+
+    function vat_hope(address usr) external {
+        vat.hope(usr);
+    }
+
+    function vat_move(address src, address dst, uint256 rad) external {
+        vat.move(src, dst, rad);
+    }
+
+    function vat_rely(address usr) external {
+        vat.rely(usr);
+    }
+
+    function vat_frob(bytes32 ilk, address u, address v, address w, int256 dink, int256 dart) external {
+        vat.frob(ilk, u, v, w, dink, dart);
+    }
+
+    function vow_file(bytes32 what, uint256 data) external {
+        vow.file(what, data);
+    }
+
+    function vow_rely(address usr) external {
+        vow.rely(usr);
+    }
+
+    function cat_rely(address usr) external {
+        cat.rely(usr);
+    }
+
+    function pot_file(bytes32 what, uint256 data) external {
+        pot.file(what, data);
+    }
+
+    function pot_rely(address usr) external {
+        pot.rely(usr);
+    }
+
+    function flap_rely(address usr) external {
+        flap.rely(usr);
+    }
+
+    function flop_rely(address usr) external {
+        flop.rely(usr);
+    }
+
+    function spotter_setPrice(bytes32 ilk, uint256 price) external {
+        if (ilk == "gold") {
+            pipGold.poke(bytes32(price));
+        }
+        spotter.poke(ilk);
+    }
+
+    function end_cage() external {
+        end.cage();
+    }
+
+    function end_cage(bytes32 ilk) external {
+        end.cage(ilk);
+    }
+
+    function end_flow(bytes32 ilk) external {
+        end.flow(ilk);
+    }
+
+    function end_thaw() external {
+        end.thaw();
+    }
+
+    function goldFlip_rely(address usr) external {
+        goldFlip.rely(usr);
+    }
+
+    function Gem_MKR_mint(address usr, uint256 wad) external {
+        gov.mint(usr, wad);
+    }
+
+    function Gem_gold_mint(address usr, uint256 wad) external {
+        gold.mint(usr, wad);
+    }
+
+    function goldJoin_join(address usr, uint256 wad) external {
+        goldJoin.join(usr, wad);
+    }
+}
+
+contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
+    DSToken gold;
+    DSValue pipGold;
+    GemJoin goldJoin;
+    Flipper goldFlip;
+    UserLike alice;
+    UserLike bobby;
+    UserLike admin;
+    UserLike anyone;
+
+    function rely(address who, address to) external {
+        address      usr = address(govActions);
+        bytes32      tag;  assembly { tag := extcodehash(usr) }
+        bytes memory fax = abi.encodeWithSignature("rely(address,address)", who, to);
+        uint         eta = now;
+
+        pause.plot(usr, tag, fax, eta);
+        pause.exec(usr, tag, fax, eta);
+    }
+
+    function file(address who, bytes32 ilk, bytes32 what, address data) external {
+        address      usr = address(govActions);
+        bytes32      tag;  assembly { tag := extcodehash(usr) }
+        bytes memory fax = abi.encodeWithSignature("file(address,bytes32,bytes32,address)", who, ilk, what, data);
+        uint         eta = now;
+
+        pause.plot(usr, tag, fax, eta);
+        pause.exec(usr, tag, fax, eta);
+    }
 
     function setUp() public {
-        tests = new MkrMcdSpecSolTests();
+        super.setUp();
+        deploy();
+
+        // Create gold contracts
+        gold = new DSToken("gold");
+        pipGold = new DSValue();
+        goldJoin = new GemJoin(address(vat), "gold", address(gold));
+        goldFlip = flipFab.newFlip(address(vat), "gold");
+        this.file(address(spotter), "gold", "pip", address(pipGold));
+
+        // Create users
+        alice = new UserLike(vat, vow, cat, pot, flap, flop, spotter, end, gov, gold, pipGold, goldJoin, goldFlip);
+        bobby = new UserLike(vat, vow, cat, pot, flap, flop, spotter, end, gov, gold, pipGold, goldJoin, goldFlip);
+        admin = new UserLike(vat, vow, cat, pot, flap, flop, spotter, end, gov, gold, pipGold, goldJoin, goldFlip);
+        anyone = new UserLike(vat, vow, cat, pot, flap, flop, spotter, end, gov, gold, pipGold, goldJoin, goldFlip);
+
+        // Give full rights to admin
+        this.rely(address(vat), address(admin));
+        this.rely(address(vow), address(admin));
+        this.rely(address(cat), address(admin));
+        this.rely(address(pot), address(admin));
+        this.rely(address(flap), address(admin));
+        this.rely(address(flop), address(admin));
+        this.rely(address(spotter), address(admin));
+        this.rely(address(end), address(admin));
+        goldJoin.rely(address(admin));
+        goldFlip.rely(address(admin));
+        gov.setOwner(address(admin));
+        gold.setOwner(address(admin));
+        pipGold.setOwner(address(admin));
     }
 
-    function testFail_basic_sanity() public {
-        assertTrue(false);
-    }
-
-    function test_basic_sanity() public {
-        assertTrue(true);
+    function testExample() public {
+        admin.vat_rely(address(goldJoin));
+        // admin.spotter_setPrice("gold", 1 * 10 ** 18);
+        admin.goldFlip_rely(address(end));
+        admin.vat_file("Line", 1000000000000);
+        admin.vat_file("spot", "gold", 3000000000);
+        admin.vat_file("line", "gold", 1000000000000);
+        admin.vow_file("bump", 1000000000);
+        admin.vow_file("hump", 0);
+        admin.Gem_gold_mint(address(alice), 20);
+        admin.Gem_gold_mint(address(bobby), 20);
+        alice.vat_hope(address(pot));
+        alice.vat_hope(address(goldFlip));
+        alice.vat_hope(address(end));
+        bobby.vat_hope(address(pot));
+        bobby.vat_hope(address(goldFlip));
+        bobby.vat_hope(address(end));
+        // alice.goldJoin_join(address(alice), 10);
+        // bobby.goldJoin_join(address(bobby), 10);
+        // alice.vat_frob("gold", address(alice), address(alice), address(alice), 10, 10);
+        // bobby.vat_frob("gold", address(bobby), address(bobby), address(bobby), 10, 10);
+        // alice.vat_move(address(alice), address(alice), 575 * 10 ** 45 / 64);
+        admin.pot_file("dsr", 1489 * 10 ** 27 / 1280);
+        hevm.warp(2);
+        alice.vat_hope(address(alice));
+        hevm.warp(1);
+        hevm.warp(1);
     }
 }
