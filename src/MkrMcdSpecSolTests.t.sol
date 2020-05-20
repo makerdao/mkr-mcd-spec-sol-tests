@@ -120,6 +120,14 @@ contract UserLike {
         spotter.poke(ilk);
     }
 
+    function spotter_file(bytes32 what, bytes32 ilk, uint256 data) external {
+        spotter.file(ilk, what, data);
+    }
+
+    function spotter_file(bytes32 what, uint256 data) external {
+        spotter.file(what, data);
+    }
+
     function end_cage() external {
         end.cage();
     }
@@ -214,34 +222,5 @@ contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
         gov.setOwner(address(admin));
         gold.setOwner(address(admin));
         pipGold.setOwner(address(admin));
-    }
-
-    function testExample() public {
-        admin.vat_rely(address(goldJoin));
-        // admin.spotter_setPrice("gold", 1 * 10 ** 18);
-        admin.goldFlip_rely(address(end));
-        admin.vat_file("Line", 1000000000000);
-        admin.vat_file("spot", "gold", 3000000000);
-        admin.vat_file("line", "gold", 1000000000000);
-        admin.vow_file("bump", 1000000000);
-        admin.vow_file("hump", 0);
-        admin.Gem_gold_mint(address(alice), 20);
-        admin.Gem_gold_mint(address(bobby), 20);
-        alice.vat_hope(address(pot));
-        alice.vat_hope(address(goldFlip));
-        alice.vat_hope(address(end));
-        bobby.vat_hope(address(pot));
-        bobby.vat_hope(address(goldFlip));
-        bobby.vat_hope(address(end));
-        // alice.goldJoin_join(address(alice), 10);
-        // bobby.goldJoin_join(address(bobby), 10);
-        // alice.vat_frob("gold", address(alice), address(alice), address(alice), 10, 10);
-        // bobby.vat_frob("gold", address(bobby), address(bobby), address(bobby), 10, 10);
-        // alice.vat_move(address(alice), address(alice), 575 * 10 ** 45 / 64);
-        admin.pot_file("dsr", 1489 * 10 ** 27 / 1280);
-        hevm.warp(2);
-        alice.vat_hope(address(alice));
-        hevm.warp(1);
-        hevm.warp(1);
     }
 }
