@@ -159,6 +159,10 @@ contract UserLike {
     function goldJoin_join(address usr, uint256 wad) external {
         goldJoin.join(usr, wad);
     }
+
+    function Gem_gold_approve(address usr) external {
+        gold.approve(usr);
+    }
 }
 
 contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
@@ -222,5 +226,19 @@ contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
         gov.setOwner(address(admin));
         gold.setOwner(address(admin));
         pipGold.setOwner(address(admin));
+
+        admin.vat_rely(address(goldJoin));
+        admin.spotter_file("par", 1000000000000000000000000000);
+        admin.spotter_file("mat", "gold", 1000000000000000000000000000);
+        admin.spotter_setPrice("gold", 3000000000000000000000000000);
+        admin.goldFlip_rely(address(end));
+        admin.vat_file("Line", 1000000000000);
+        admin.vat_file("spot", "gold", 3000000000);
+        admin.vat_file("line", "gold", 1000000000000);
+        admin.vow_file("bump", 1000000000);
+        admin.vow_file("hump", 0);
+
+        alice.Gem_gold_approve(address(goldJoin));
+        bobby.Gem_gold_approve(address(goldJoin));
     }
 }
