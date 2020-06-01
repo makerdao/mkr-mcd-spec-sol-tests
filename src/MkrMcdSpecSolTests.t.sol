@@ -101,8 +101,24 @@ contract UserLike {
         pot.file(what, data);
     }
 
+    function pot_file(bytes32 what, address data) external {
+        pot.file(what, data);
+    }
+
     function pot_rely(address usr) external {
         pot.rely(usr);
+    }
+
+    function pot_drip() external {
+        pot.drip();
+    }
+
+    function pot_join(uint wad) external {
+        pot.join(wad);
+    }
+
+    function pot_exit(uint wad) external {
+        pot.exit(wad);
     }
 
     function flap_rely(address usr) external {
@@ -111,6 +127,10 @@ contract UserLike {
 
     function flop_rely(address usr) external {
         flop.rely(usr);
+    }
+
+    function flop_file(bytes32 what, uint data) external {
+        flop.file(what, data);
     }
 
     function spotter_setPrice(bytes32 ilk, uint256 price) external {
@@ -142,6 +162,14 @@ contract UserLike {
 
     function end_thaw() external {
         end.thaw();
+    }
+
+    function end_pack(uint256 wad) external {
+        end.pack(wad);
+    }
+
+    function end_skim(bytes32 ilk, address urn) external {
+        end.skim(ilk, urn);
     }
 
     function goldFlip_rely(address usr) external {
