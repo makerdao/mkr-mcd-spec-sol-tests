@@ -85,6 +85,10 @@ contract UserLike {
         vat.frob(ilk, u, v, w, dink, dart);
     }
 
+    function vat_init(bytes32 ilk) external {
+        vat.init(ilk);
+    }
+
     function vow_file(bytes32 what, uint256 data) external {
         vow.file(what, data);
     }
@@ -191,6 +195,10 @@ contract UserLike {
     function Gem_gold_approve(address usr) external {
         gold.approve(usr);
     }
+
+    function warpForward(uint wad) external {
+        hevm.warp(now + wad);
+    }
 }
 
 contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
@@ -255,6 +263,7 @@ contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
         gold.setOwner(address(admin));
         pipGold.setOwner(address(admin));
 
+        admin.vat_init("gold");
         admin.vat_rely(address(goldJoin));
         admin.spotter_file("par", 1000000000000000000000000000);
         admin.spotter_file("mat", "gold", 1000000000000000000000000000);
