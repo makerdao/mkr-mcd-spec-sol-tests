@@ -195,6 +195,10 @@ contract UserLike {
     function Gem_gold_approve(address usr) external {
         gold.approve(usr);
     }
+
+    function warpForward(uint wad) external {
+        hevm.warp(now + wad);
+    }
 }
 
 contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
