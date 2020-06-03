@@ -196,9 +196,6 @@ contract UserLike {
         gold.approve(usr);
     }
 
-    function warpForward(uint wad) external {
-        hevm.warp(now + wad);
-    }
 }
 
 contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
@@ -229,6 +226,10 @@ contract MkrMcdSpecSolTestsTest is DssDeployTestBase {
 
         pause.plot(usr, tag, fax, eta);
         pause.exec(usr, tag, fax, eta);
+    }
+
+    function warpForward(uint256 time) external {
+        hevm.warp(now + time);
     }
 
     function setUp() public {
