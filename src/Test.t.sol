@@ -1,4 +1,4 @@
-pragma solidity ^0.5.12;
+pragma solidity >=0.5.12;
 
 import "./MkrMcdSpecSolTests.t.sol";
 
@@ -6,8 +6,8 @@ contract TestExample is MkrMcdSpecSolTestsTest {
 
 
     function test0() public {
-
         // Test Run
+        setUp2();
 
         assertTrue(admin.vat_rely(address(pot)), "errorX");
         assertTrue(admin.vat_rely(address(end)), "errorX");
@@ -141,7 +141,7 @@ contract TestExample is MkrMcdSpecSolTestsTest {
     }
 
     function test1() public {
-
+        setUp2();
         // Test Run
 
         assertTrue(admin.vat_rely(address(pot)), "errorX");
@@ -244,8 +244,8 @@ contract TestExample is MkrMcdSpecSolTestsTest {
     }
 
     function test2() public {
-
         // Test Run
+        setUp2();
 
         assertTrue(admin.vat_rely(address(pot)), "errorX");
         assertTrue(admin.vat_rely(address(end)), "errorX");
@@ -383,8 +383,8 @@ contract TestExample is MkrMcdSpecSolTestsTest {
     }
 
 //     function test3() public {
-
 //         // Test Run
+//         setUp2();
 
 //         assertTrue(admin.vat_rely(address(pot)), "errorX");
 //         assertTrue(admin.vat_rely(address(end)), "errorX");
@@ -486,8 +486,8 @@ contract TestExample is MkrMcdSpecSolTestsTest {
 //     }
 
 //     function test4() public {
-
 //         // Test Run
+//         setUp2();
 
 //         assertTrue(admin.vat_rely(address(pot)), "errorX");
 //         assertTrue(admin.vat_rely(address(end)), "errorX");
